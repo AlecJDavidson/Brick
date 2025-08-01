@@ -1,55 +1,84 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Button, Table, TableCaption } from '@chakra-ui/react';
 
 interface Brick {
   name: string;
   id: number;
   language: string;
-  sourcePath: string;
-  createdAt: string;
-  lastInvoked: string;
+  source_path: string;
+  created_at: string;
+  last_invoked: string;
 }
+
+const invoke = (brick: Brick) => {
+  axios
+    .get(`http://localhost:3000/api/brick/invoke/${brick.id}`)
+    .then(function(response) {
+      // handle success
+      console.log(response);
+    })
+    .catch(function(error) {
+      // handle error
+      console.log(error);
+    })
+    .finally(function() {
+      // always executed
+    });
+};
 
 const BrickTable: React.FC = () => {
   const [bricks, setBricks] = useState<Brick[]>([]);
   const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    axios.get(apiUrl)
-      .then(response => {
-        setBricks(response.data);
-        console.log(response);
+    axios
+      .get(apiUrl)
+      .then((response) => {
+        setBricks(response.data.bricks);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error fetching bricks:', error);
       });
   }, [apiUrl]);
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>ID</th>
-          <th>Language</th>
-          <th>Source Path</th>
-          <th>Created At</th>
-          <th>Last Invoked</th>
-        </tr>
-      </thead>
-      <tbody>
-        {bricks.map(brick => (
-          <tr key={brick.id}>
-            <td>{brick.name}</td>
-            <td>{brick.id}</td>
-            <td>{brick.language}</td>
-            <td>{brick.sourcePath}</td>
-            <td>{new Date(brick.createdAt).toLocaleString()}</td>
-            <td>{new Date(brick.lastInvoked).toLocaleString()}</td>
-          </tr>
+    <Table.Root>
+      <Table.Header>
+        <Table.Row>
+          <Table.ColumnHeader>Name</Table.ColumnHeader>
+          <Table.ColumnHeader>ID</Table.ColumnHeader>
+          <Table.ColumnHeader>Language</Table.ColumnHeader>
+          <Table.ColumnHeader>Source Path</Table.ColumnHeader>
+          <Table.ColumnHeader>Created At</Table.ColumnHeader>
+          <Table.ColumnHeader>Last Invoked</Table.ColumnHeader>
+          <Table.ColumnHeader>Invoke</Table.ColumnHeader>
+          <Table.ColumnHeader>Details</Table.ColumnHeader>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {bricks.map((brick) => (
+          <Table.Row key={brick.id}>
+            <Table.Cell>{brick.name}</Table.Cell>
+            <Table.Cell>{brick.id}</Table.Cell>
+            <Table.Cell>{brick.language}</Table.Cell>
+            <Table.Cell>{brick.source_path}</Table.Cell>
+            <Table.Cell>
+              {new Date(brick.created_at).toLocaleString()}
+            </Table.Cell>
+            <Table.Cell>
+              {new Date(brick.last_invoked).toLocaleString()}
+            </Table.Cell>
+            <Table.Cell>
+              <Button onClick={() => invoke(brick)}>Invoke</Button>
+            </Table.Cell>
+            <Table.Cell>
+              <Button onClick={() => console.log('Clicked!')}>Details</Button>
+            </Table.Cell>
+          </Table.Row>
         ))}
-      </tbody>
-    </table>
+      </Table.Body>
+    </Table.Root>
   );
 };
 
