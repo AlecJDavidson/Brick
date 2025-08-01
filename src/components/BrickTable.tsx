@@ -8,7 +8,9 @@ const invoke = (brick: Brick) => {
   axios
     .get(`http://localhost:3000/api/brick/invoke/${brick.id}`)
     .then(function(response) {
-      console.log(response);
+      console.log(response.data.status);
+      console.log(response.data.stderr);
+      console.log(response.data.stdout);
     })
     .catch(function(error) {
       console.log(error);
