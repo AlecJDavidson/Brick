@@ -1,15 +1,18 @@
 import React from 'react';
 import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
 import BrickTable from './components/BrickTable';
+import BrickDetails from './components/BrickDetails';
 
 const App: React.FC = () => {
   return (
-    <div className='App'>
-      <header className='App-header'>
-        <h1>Brick Table</h1>
-        <BrickTable />
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<BrickTable />} />
+        <Route path="/brick-details/:brickId" element={<BrickDetails />} />
+      </Routes>
+    </Router>
   );
 };
 

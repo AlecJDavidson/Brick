@@ -1,35 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Button, Table, TableCaption } from '@chakra-ui/react';
-
-interface Brick {
-  name: string;
-  id: number;
-  language: string;
-  source_path: string;
-  created_at: string;
-  last_invoked: string;
-}
+import { useNavigate } from 'react-router-dom';
+import { Brick } from '../types/Brick';
 
 const invoke = (brick: Brick) => {
   axios
     .get(`http://localhost:3000/api/brick/invoke/${brick.id}`)
     .then(function(response) {
-      // handle success
       console.log(response);
     })
     .catch(function(error) {
-      // handle error
       console.log(error);
     })
-    .finally(function() {
-      // always executed
-    });
+    .finally(function() { });
 };
 
 const BrickTable: React.FC = () => {
   const [bricks, setBricks] = useState<Brick[]>([]);
   const apiUrl = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -73,7 +63,9 @@ const BrickTable: React.FC = () => {
               <Button onClick={() => invoke(brick)}>Invoke</Button>
             </Table.Cell>
             <Table.Cell>
-              <Button onClick={() => console.log('Clicked!')}>Details</Button>
+              <Button onClick={() => navigate(`/brick-details/${brick.id}`)}>
+                Details
+              </Button>
             </Table.Cell>
           </Table.Row>
         ))}
