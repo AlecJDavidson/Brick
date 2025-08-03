@@ -1,6 +1,6 @@
 export type Brick = {
   name: string;
-  id: number;
+  id: string;
   language: string;
   source_path: string;
   created_at: string;
