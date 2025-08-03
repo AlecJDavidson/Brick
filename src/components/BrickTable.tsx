@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button, Table, TableCaption } from '@chakra-ui/react';
+import { Button, Table } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { Brick } from '../types/Brick';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 const invoke = (brick: Brick) => {
   axios
-    .get(`http://localhost:3000/api/brick/invoke/${brick.id}`)
+    .get(`${apiUrl}/invoke/${brick.id}`)
     .then(function(response) {
       console.log(response.data.status);
       console.log(response.data.stderr);
